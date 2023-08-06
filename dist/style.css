@@ -253,3 +253,6 @@ button{
     grid-column: span 2;
 }
 
+header > img {
+    height: 1em;
+}
