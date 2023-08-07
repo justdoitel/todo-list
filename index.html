@@ -12,9 +12,9 @@
     <script src="main.js" defer></script>
 </head>
 <body>
-    <header> <img src="to-do-list.svg" alt="The page's logo"> Todo List <button class="small-stuff">=</button></header>
-    <div class="sidebar">
-        <button class="small-stuff" id="sidebar-close">X</button>
+    <header> <img src="to-do-list.svg" alt="The page's logo"> Todo List <button class="small-stuff" id="sidebar-open">≡</button></header>
+    <div class="sidebar hide-in-small">
+        <img src="close.svg" alt="" class="small-stuff" id="sidebar-close">
         <ul class="menu">
             <li data-speciality = "today"> <img src ="./today.svg">Today</li>
             <li data-speciality = "thisweek"> <img src ="./week.svg">This Week</li>
@@ -29,9 +29,7 @@
        
     </div>
     <div id="overlay">
-        <div class="card">
-            
-        </div>
+        
     </div>
 </body>
 </html>
