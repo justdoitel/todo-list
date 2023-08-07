@@ -45,7 +45,7 @@ table {
 
 body {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 18em 1fr;
     height: 100svh;
     grid-template-rows: min-content 1fr;
     font-family: "Roboto", sans-serif;
@@ -55,7 +55,7 @@ header {
     grid-column: span 2;
     display: flex;
     justify-content: center;
-    font-size: 40px;
+    font-size: 3.25em;
     font-weight: 900;
     padding: 20px 0;
     background-color: hsl(0,0%, 20%);
@@ -70,12 +70,13 @@ header {
 
 .content {
     overflow-y: auto;
-    padding-right: 10px;
+    padding: 50px 5vw 0 5vw;
+    max-width: max(50em,80%);
 }
 
 .sidebar li {
     padding: 10px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 1vh;
     border-radius: 5px;
     transition: .3s;
 }
@@ -124,10 +125,7 @@ header {
     color: black
 }
 
-.content {
-    padding: 50px 0 0 50px;
-    max-width: 50em;
-}
+
 
 .content h1 {
     font-weight: 900;
@@ -144,12 +142,15 @@ header {
     padding: 0.25em 1em;
 }
 
-.content ul {
-    padding: 0 0 0 15px;
-    
+.content h1 span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-
+.content ul {
+    padding: 0 0 0 15px;
+}
 
 .content ul li {
     height: 2em;
@@ -157,7 +158,7 @@ header {
     display: flex;
     align-items: center;
     padding: 5px 5px;
-    margin-bottom: 5px;
+    margin-bottom: 0.25vw;
 }
 
 
@@ -215,6 +216,7 @@ button{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    height: calc(1em + 1px);
 }
 
 #overlay {
@@ -255,4 +257,40 @@ button{
 
 header > img {
     height: 1em;
+}
+
+.small-stuff {
+    display: none;
+}
+
+@media (max-width: 50em) {
+    .content {
+        grid-column: span 2;
+    }
+
+    .small-stuff {
+        display: block;
+    }
+    #sidebar-close {
+        position: relative;
+        bottom: 5px;
+        right: 5px;
+    }
+    header {
+        padding-left: 2vw;
+        padding-right: 2vw;
+        align-items: center;
+    }
+    header > button {
+        margin-left: auto;
+    }
+    .hide-in-small{
+        display: none;
+    }
+    .sidebar {
+       position: absolute;
+       right: 0;
+       height: 100svh;
+       transition: 3s;
+    }
 }
