@@ -12,8 +12,9 @@
     <script src="main.js" defer></script>
 </head>
 <body>
-    <header> <img src="to-do-list.svg" alt="The page's logo"> Todo List</header>
+    <header> <img src="to-do-list.svg" alt="The page's logo"> Todo List <button class="small-stuff">=</button></header>
     <div class="sidebar">
+        <button class="small-stuff" id="sidebar-close">X</button>
         <ul class="menu">
             <li data-speciality = "today"> <img src ="./today.svg">Today</li>
             <li data-speciality = "thisweek"> <img src ="./week.svg">This Week</li>
@@ -21,7 +22,7 @@
         </ul>
         <h2> Projects <button class="project-add">+</button></h2>
         <ul class="projects">
-            <li class="active" data-id="0"> <span class="project-name">Main</span></li>
+            <li class="active" data-id="0"> <img src="listicon.svg" alt=""><span class="project-name">Main</span></li>
         </ul>
     </div>
     <div class="content">

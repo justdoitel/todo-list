@@ -1,8 +1,8 @@
-//TODO: Sort
+//TODO: work on style (especially media)
+//TODO: Sort 
 //TODO: Moving projects of ids
 //TODO: stop reloading on change (just append)
-//TODO: Allow submission with enter
-//make no note and no title a placeholder
+//TODO: make no note and no title a placeholder (by changing the db to store two boolean value for noname & nonote)
 
 import Dexie from 'dexie';
 import circle from './circle.svg'
@@ -22,7 +22,6 @@ const date = (()=>{
 })();
 
 const database = (()=>{
-
     const initialLoad = async() =>{
         await db.version(1).stores({
             project: "++id",
@@ -33,7 +32,7 @@ const database = (()=>{
     }
     
     const addProject = async (name,id)=>{  //creates a project in database and return its id 
-        name = name? name: "No Name"
+        name = name? name: "[No Name]"
         if(id===undefined){
             let x = await db.project.add({name});
             id=x
@@ -46,8 +45,8 @@ const database = (()=>{
      
 
     const addTask = async (title,note,dueDate,priority,done,projectid)=>{
-        title = title? title: "No Title"
-        note = note? note: "No Note"
+        title = title? title: "[Unnamed Task]"
+        note = note? note: "[No Note]"
         dueDate = dueDate? new Date(dueDate): "No date"
         priority = priority? priority:1
         done = done? done:false;
@@ -94,8 +93,19 @@ const database = (()=>{
     }
 
     //updates should be key-value pair of what we want to change
-    const editTask = async(taskid,updates) => (db.task.update(taskid,updates))
-    const editProject = async(projectid,updates) => (db.project.update(projectid,updates))
+    const editTask = async(taskid,updates) => {
+        if(updates.title === ""){
+            updates.title = "[Unnamed Task]"
+        }
+        if(updates.note === ""){
+            updates.note = "[No Note]"
+        }
+        return db.task.update(taskid,updates);
+    }
+    const editProject = async(projectid,updates) => {
+        if (updates.name ==="") updates.name="[No Name]";
+        return db.project.update(projectid,updates);
+    }
     const deleteTask = async(taskid) => (db.task.delete(taskid))
     const deleteProject = async(projectid,keep) => {
         db.project.delete(projectid)
@@ -140,13 +150,18 @@ const displayControl = (()=>{
             card.append(input);
             card.append(button);
             overlay.replaceChildren(card);
-            button.addEventListener("click",async ()=>{
+            const submit = async ()=>{
                 let newid = await database.addProject(input.value);
                 await loadProjects();
                 document.querySelector(`.projects > li[data-id="${newid}"]`).click();
                 overlay.click();
-            })
+            }
+            button.addEventListener("click",submit);
+            card.addEventListener("keydown",(event)=>(event.code==="Enter"&&submit()))
         })
+        const sidebar = document.querySelector('.sidebar')
+        document.getElementById("sidebar-close").addEventListener("click",()=>{sidebar.classList.toggle ('hide-in-small')})
+        document.querySelector("header>button").addEventListener("click",()=>{sidebar.classList.toggle ('hide-in-small')})
     }
     const listenToSideBtns = ()=>{
         const sidebtns = document.querySelectorAll(".sidebar li")
@@ -162,7 +177,7 @@ const displayControl = (()=>{
         let bar = event.currentTarget;
         bar.classList.add("active");
         if(bar.dataset.speciality){
-            let title = "Unknown Error in line 117 haha";
+            let title = "Unknown Error haha";
             if(bar.dataset.speciality=="today") title = "Today";
             if(bar.dataset.speciality=="thisweek") title = "This Week";
             if(bar.dataset.speciality=="nextweek") title = "Next Week";
@@ -360,18 +375,21 @@ const displayControl = (()=>{
                 button.textContent = "Rename!"
                 button.classList.add("span2")
                 input.setAttribute("type","text")
-                input.value = span.textContent;
+                // input.value = span.textContent;
                 card.append(header);
                 card.append(input);
                 card.append(button);
                 overlay.replaceChildren(card);
-                button.addEventListener("click",async ()=>{
+                const submit = async ()=>{
                     await database.editProject(pid,{name: input.value})
+                    let lastOpen = document.querySelector(`.active`).dataset.id;
                     await loadProjects();
                     //document.querySelector(`.projects > li[data-id="${pid}"]`).click(); TODO: decide if you wanna keep this instead
-                    document.querySelector(`.active`).click();
+                    document.querySelector(`.projects > li[data-id="${lastOpen}"]`).click(); 
                     overlay.click();
-                })
+                }
+                button.addEventListener("click",submit)
+                card.addEventListener("keydown",(event)=>(event.code==="Enter"&&submit()))
             })
             del.addEventListener("click",(event)=>{
                 event.stopPropagation();
@@ -413,10 +431,8 @@ const displayControl = (()=>{
     return {listenToSideBtns,load, loadProjects};
 })();
 
-
 displayControl.listenToSideBtns();
 displayControl.load();
-
 
 
 
