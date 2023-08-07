@@ -1,4 +1,3 @@
-//TODO: work on style (especially media)
 //TODO: Sort 
 //TODO: Moving projects of ids
 //TODO: stop reloading on change (just append)
@@ -135,9 +134,11 @@ const displayControl = (()=>{
         mainbtn.click();
         loadProjects();
         overlay.addEventListener("click",(event)=>(event.target.id==="overlay" && overlay.classList.remove("show")&overlay.replaceChildren()));
-        projectaddbtn.addEventListener("click",()=>{
+        projectaddbtn.addEventListener("click",(event)=>{
+            event.stopPropagation();
             overlay.classList.add("show");
             let card = document.createElement('div');
+            card.addEventListener("click",(eve)=>(eve.stopPropagation()));
             card.classList.add('card')
             let header = document.createElement('span');
             header.textContent = "What'd be the name of the new project?"
@@ -160,8 +161,21 @@ const displayControl = (()=>{
             card.addEventListener("keydown",(event)=>(event.code==="Enter"&&submit()))
         })
         const sidebar = document.querySelector('.sidebar')
-        document.getElementById("sidebar-close").addEventListener("click",()=>{sidebar.classList.toggle ('hide-in-small')})
-        document.querySelector("header>button").addEventListener("click",()=>{sidebar.classList.toggle ('hide-in-small')})
+        sidebar.addEventListener("click",()=>{
+            let x = document.querySelector('.card')
+            if(x) {
+                x.remove();
+            }
+        })
+        document.getElementById("sidebar-close").addEventListener("click",()=>{
+            sidebar.classList.add ('hide-in-small')
+            overlay.classList.remove('show')
+        })
+        overlay.addEventListener("click",()=>{sidebar.classList.add ('hide-in-small')})
+        document.getElementById("sidebar-open").addEventListener("click",()=>{
+            sidebar.classList.remove ('hide-in-small')
+            overlay.classList.add('show')
+        })
     }
     const listenToSideBtns = ()=>{
         const sidebtns = document.querySelectorAll(".sidebar li")
@@ -176,6 +190,7 @@ const displayControl = (()=>{
         }
         let bar = event.currentTarget;
         bar.classList.add("active");
+        setTimeout(()=>(overlay.click()),50);
         if(bar.dataset.speciality){
             let title = "Unknown Error haha";
             if(bar.dataset.speciality=="today") title = "Today";
@@ -190,6 +205,7 @@ const displayControl = (()=>{
     const editTask = async (action,id) =>{ //action is "add" or "edit", id is projectid for add and taskid for edit 
         overlay.classList.add('show')
         let card = document.createElement('div')
+        card.addEventListener("click",(eve)=>(eve.stopPropagation()));
         card.classList.add('card')
         let tasknamelabel = document.createElement('label')
         tasknamelabel.setAttribute("for","task-name")
@@ -367,6 +383,7 @@ const displayControl = (()=>{
                 event.stopPropagation();
                 overlay.classList.add("show");
                 let card = document.createElement('div');
+                card.addEventListener("click",(eve)=>(eve.stopPropagation()));
                 card.classList.add('card')
                 let header = document.createElement('span');
                 header.textContent = "What would you like to rename this project to?"
@@ -395,6 +412,7 @@ const displayControl = (()=>{
                 event.stopPropagation();
                 overlay.classList.add("show");
                 let card = document.createElement('div');
+                card.addEventListener("click",(eve)=>(eve.stopPropagation()));
                 card.classList.add('card')
                 let header = document.createElement('h1');
                 header.textContent = "Would you like to move this project's tasks to the main project?"

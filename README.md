@@ -8,3 +8,4 @@ This is a pretty self-explanatory todo list. Play around with it and, perhaps, u
 * The delete icon is made by Kreasi Kanvas.
 * The favicon/logo is made by IconScout Store.
 * The Main project icon is made by Stockes Design.
+* The X button in the sidebar is made by Unicons Font.
