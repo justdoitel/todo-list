@@ -2,6 +2,8 @@
 //TODO: Moving projects of ids
 //TODO: stop reloading on change (just append)
 //TODO: make no note and no title a placeholder (by changing the db to store two boolean value for noname & nonote)
+//When editing in mobile mode, don't click overlay (disabling the buttons)
+//Clicking (for mobile) should show the edit button as there's no hover functionality
 
 import Dexie from 'dexie';
 import circle from './circle.svg'
@@ -250,13 +252,12 @@ const displayControl = (()=>{
             card.appendChild(addbtn);
 
             addbtn.addEventListener("click",async ()=>{
-                console.log("I am adding", taskname.value, duedate.value,priority.value,textarea.value)
                 let formatteddate = duedate.value.split('-')[1]+"/"+duedate.value.split('-')[2]+"/"+duedate.value.split('-')[0]
                 if (!duedate.value||new Date(formatteddate)!="Invalid Date"){
                     let mypriority = priority.value;
                     if(mypriority>3) mypriority=3;
                     else if (mypriority<1) mypriority=1;
-                    let x = await database.addTask(taskname.value,textarea.value,!duedate.value?"":new Date(formatteddate),mypriority,false,pid); //TODO: just append
+                    await database.addTask(taskname.value,textarea.value,!duedate.value?"":new Date(formatteddate),mypriority,false,pid); //TODO: just append
                     await loadProjectsToContent (pid);
                     overlay.click();
                     
@@ -265,7 +266,6 @@ const displayControl = (()=>{
 
         } else if (action ==="edit"){
             let taskid = id
-            console.log(taskid)
             let task = await database.getTasks("all",{id:taskid}); 
             task = task[0];
             taskname.value = task.title;
@@ -291,7 +291,7 @@ const displayControl = (()=>{
                     let mypriority = priority.value;
                     if(mypriority>3) mypriority=3;
                     else if (mypriority<1) mypriority=1;
-                    let x = await database.editTask(taskid,{title: taskname.value, note: textarea.value, dueDate:!duedate.value?"No date":new Date(formatteddate), priority: mypriority}); 
+                    await database.editTask(taskid,{title: taskname.value, note: textarea.value, dueDate:!duedate.value?"No date":new Date(formatteddate), priority: mypriority}); 
                     overlay.click();
                     document.querySelector('.active').click(); 
                 }
@@ -312,7 +312,7 @@ const displayControl = (()=>{
             let temp = await database.getProjectByid(pid)
             title.textContent = temp[0].name;
             let addBtn = document.createElement('button')
-            addBtn.textContent = "+"
+            addBtn.textContent = "Add Task"
             addBtn.addEventListener("click",()=>{
                 editTask("add",pid) 
             })
