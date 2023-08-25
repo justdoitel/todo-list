@@ -153,7 +153,7 @@ header {
 }
 
 .content h1 button:hover {
-    background-color: hsl(0, 0%, 85%);
+    background-color: hsl(0, 0%, 80%);
     border: 1px solid black;
 }
 
@@ -220,6 +220,13 @@ button{
 .list:hover img:last-of-type{
     display: block;
     cursor: pointer;
+}
+
+@media (hover: none) {
+    .list img:last-of-type {
+        display: block;
+        cursor: pointer;
+    }
 }
 
 .list span:first-of-type {
@@ -359,3 +366,4 @@ header > img {
         padding-right: 5px;
     }
 }
+
